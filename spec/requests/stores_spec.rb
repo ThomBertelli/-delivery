@@ -89,7 +89,7 @@ RSpec.describe "/stores", type: :request do
   describe "PATCH /update" do
     context "with valid parameters" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        {name: "great store"}
       }
 
       it "updates the requested store" do
