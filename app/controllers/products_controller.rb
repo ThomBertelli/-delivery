@@ -1,7 +1,7 @@
 class ProductsController < ApplicationController
 
   def listing
-    @products = Product.all
+    @products = Product.includes(:store)
   end
 
 end
