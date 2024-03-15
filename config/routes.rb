@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :users
   resources :stores
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -10,4 +11,5 @@ Rails.application.routes.draw do
   # root "posts#index"
   #
   get "listing" => "products#listing"
+  root to: "welcome#index"
 end
