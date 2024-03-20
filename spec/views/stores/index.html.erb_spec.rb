@@ -1,13 +1,22 @@
 require 'rails_helper'
 
+
 RSpec.describe "stores/index", type: :view do
+
+  user = User.new(
+    email: "user@example.com",password: "123456", password_confirmation: "123456"
+  )
+
+
   before(:each) do
     assign(:stores, [
       Store.create!(
-        name: "Name"
+        name: "Name",
+        user: user
       ),
       Store.create!(
-        name: "Name"
+        name: "Name",
+        user: user
       )
     ])
   end

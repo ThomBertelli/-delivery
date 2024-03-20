@@ -1,9 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe "stores/edit", type: :view do
+
+
+  
   let(:store) {
     Store.create!(
-      name: "MyString"
+      name: "MyString",
+      user: User.new(
+        email: "user@example.com",password: "123456", password_confirmation: "123456"
+      )
     )
   }
 
