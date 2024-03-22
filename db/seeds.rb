@@ -25,55 +25,43 @@ end
   Store.find_or_create_by!(name: store, user: user)
 end
 
+[
 
-# ["Orange Curry","Belly King"].each do |store|
+"Massaman Curry",
 
-#   Store.find_or_create_by!(
+"Risotto with Seafood",
 
-#   name: store, user: user
+"Tuna Sashimi",
 
-# )
+"Fish and Chips",
 
-# end
+"Pasta Carbonara"
 
+].each do |dish|
 
-# [
+  store = Store.find_by(name: "Orange Curry")
 
-# "Massaman Curry",
+  Product.find_or_create_by!( title: dish, store: store )
 
-# "Risotto with Seafood",
-
-# "Tuna Sashimi",
-
-# "Fish and Chips",
-
-# "Pasta Carbonara"
-
-# ].each do |dish|
-
-#   store = Store.find_by(name: "Orange Curry")
-
-#   Product.find_or_create_by!( title: dish, store: store )
-
-# end
+end
 
 
-# [
+[
 
-# "Mushroom Risotto",
+"Mushroom Risotto",
 
-# "Caesar Salad",
+"Caesar Salad",
 
-# "Mushroom Risotto",
+"Mushroom Risotto",
 
-# "Tuna Sashimi",
+"Tuna Sashimi",
 
-# "Chicken Milanese"
+"Chicken Milanese"
 
-# ].each do |dish|
+].each do |dish|
 
-# store = Store.find_by(name: "Belly King")
+store = Store.find_by(name: "Belly King")
 
-# Product.find_or_create_by!(title: dish, store: store)
+Product.find_or_create_by!(title: dish, store: store)
 
-# end
+end
