@@ -8,6 +8,13 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   def self.from_token(token)
-    nil
+    JWT.decode token , "muito.secreto", {algorithm: 'HS256'}
   end
+
+  def self.token_for(user)
+    payload = {id: user.id, email: user.email, role: user.role}
+    JWT.encode payload, "muito.secreto", "HS256"
+  end
+
+
 end

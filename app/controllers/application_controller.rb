@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   private
 
   def check_token!
-    if user = authenticate_with_hppt_token {|t, _| User.from_token(t)}
+    if user = authenticate_with_http_token {|t, _| User.from_token(t)}
 
     else
       render json:{message: "Not authorized"}, status: 401
