@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  class InvalidToken < StandardError; end
   enum :role, [:admin, :seller, :buyer]
   has_many :stores
 
@@ -8,13 +9,26 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   def self.from_token(token)
-    JWT.decode token , "muito.secreto", {algorithm: 'HS256'}
+    decoded = JWT.decode(
+      token, Rails.application.credentials.jwt_secret_key, true, {algorithm: "HS256"}
+    )
+    user_data = decoded[0].with_indifferent_access
+    user_data
+  rescue JWT::ExpiredSignature
+    raise InvalidToken.new
   end
 
   def self.token_for(user)
-    payload = {id: user.id, email: user.email, role: user.role}
-    JWT.encode payload, "muito.secreto", "HS256"
+    jwt_headers = {exp: 1.hour.from_now.to_i}
+    payload = {
+      id: user.id,
+      email: user.email,
+      role: user.role
+    }
+    JWT.encode(
+      payload.merge(jwt_headers),
+      Rails.application.credentials.jwt_secret_key,
+      "HS256"
+    )
   end
-
-
 end
