@@ -29,13 +29,23 @@ class RegistrationsController<ApplicationController
 
 
   end
+  def create
+    @user = User.new(user_params)
+    @user.role = current_credential.access
+
+    if @user.save
+      render json: {"email": @user.email}
+    else
+      render json: {}, status: :unprocessable_entity
+    end
+  end
 
   private
 
   def user_params
     params
       .required(:user)
-      .permit(:email, :password, :password_confirmation, :role)
+      .permit(:email, :password, :password_confirmation)
   end
 
   def sign_in_params
@@ -47,4 +57,8 @@ class RegistrationsController<ApplicationController
   def not_authorized(e)
     render json: {message: "Nope!"}, status: 401
   end
+
+
+
+
 end
