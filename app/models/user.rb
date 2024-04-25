@@ -2,7 +2,7 @@ class User < ApplicationRecord
   class InvalidToken < StandardError; end
   enum :role, [:admin, :seller, :buyer]
   has_many :stores
-  validates :role, present: true
+  validates :role, presence: true
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
