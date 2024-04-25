@@ -28,5 +28,20 @@ RSpec.describe "registrations", type: :request do
       expect(response).to be_successful
       expect(user).to be_buyer
     end
+
+    it "fail to create user without credentials" do
+      post(
+        create_registration_url,
+        headers: {"Accept" => "application/json"},
+        params: {
+          user: {
+            email: "admin_user@example.com",
+            password: "123456",
+            password_confirmation: "123456"
+          }
+        }
+      )
+        expect(response).to be_unprocessable
+    end
   end
 end
