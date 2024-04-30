@@ -19,11 +19,19 @@ RSpec.describe "/stores", type: :request do
     sign_in(user)
   }
 
+  let(:credential) { Credential.create_access(:seller) }
+  let(:signed_in) { api_sign_in(user, credential) }
+
 
   describe "GET /show" do
     it "renders a successful responde with stores data" do
       store = Store.create! valid_attributes
-      get "/stores/#{store.id}", headers: {"Accept" => "application/json"}
+      get(
+        "/stores/#{store.id}",
+        headers:
+          {"Accept" => "application/json"},
+          "Authorization" => "Bearer #{signed_in["token"]}"
+      )
       json = JSON.parse(response.body)
       expect(json["name"]).to eq valid_attributes[:name]
     end
