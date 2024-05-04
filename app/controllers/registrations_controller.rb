@@ -3,13 +3,6 @@ class RegistrationsController<ApplicationController
   before_action :authenticate!, only: [:me]
   rescue_from User::InvalidToken, with: :not_authorized
 
-  def create
-    @user = User.new(user_params)
-    if @user.save
-      render json: {"email": @user.email}
-    end
-  end
-
   def me
     render json: {
       id: current_user[:id], email: current_user[:email]
