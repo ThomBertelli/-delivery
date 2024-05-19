@@ -4,6 +4,8 @@ class Order < ApplicationRecord
 
   validate :buyer_role
 
+  private
+
   def buyer_role
     if !buyer.buyer?
       errors.add(:buyer, "should be a 'user.buyer'")
