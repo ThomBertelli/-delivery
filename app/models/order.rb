@@ -6,11 +6,9 @@ class Order < ApplicationRecord
 
   validate :buyer_role
 
-  def accept
-    if self.state == :created
-      update! state: :accepted
-    else
-      raise "Can't change to ':accepted' from #{self.state}"
+  state_machine initial: :created do
+    event :accept do
+      transition created: :accepted
     end
   end
 
