@@ -16,6 +16,11 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def current_credential
+    return nil if request.format != Mime[:json]
+    Credential.
+    find_by(key: request.headers["X-API-KEY"]) || Credential.new
+  end
   private
 
   def check_token!
@@ -26,13 +31,11 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def current_credential
-    return nil if request.format != Mime[:json]
-    Credential.
-    find_by(key: request.headers["X-API-KEY"]) || Credential.new
-  end
 
   def only_buyers!
+
+    puts @user
+
     is_buyer = (current_user && current_user.buyer?) && current_credential.buyer?
 
     if !is_buyer

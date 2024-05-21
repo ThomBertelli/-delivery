@@ -14,7 +14,8 @@ class User < ApplicationRecord
       token, Rails.application.credentials.jwt_secret_key, true, {algorithm: "HS256"}
     )
     user_data = decoded[0].with_indifferent_access
-    user_data
+    user = User.new(user_data.except(:exp))
+    user
   rescue JWT::ExpiredSignature
     raise InvalidToken.new
   end
