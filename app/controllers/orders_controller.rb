@@ -6,7 +6,7 @@ class OrdersController<ApplicationController
     @order = Order.new(order_params) { |o| o.buyer = current_user }
 
     if @order.save
-      render json: {order: @order}
+      render :create, status: :created
     else
       render json: {errors: @order.errors, status: :unprocessable_entity}
     end

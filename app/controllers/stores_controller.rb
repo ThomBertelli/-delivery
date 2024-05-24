@@ -1,4 +1,5 @@
 class StoresController < ApplicationController
+  skip_forgery_protection
   before_action :set_store, only: %i[ show edit update destroy ]
   before_action :authenticate!
 
