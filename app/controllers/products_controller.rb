@@ -8,4 +8,18 @@ class ProductsController < ApplicationController
     @products = Product.includes(:store)
   end
 
+  def index
+    respond_to do |format|
+      format.json do
+        if only_buyers!
+          page = params.fetch(:page,1)
+          @products = Product.
+            where(store_id: params[:store_id]).
+            order(:title)
+            page(page)
+        end
+      end
+    end
+  end
+
 end

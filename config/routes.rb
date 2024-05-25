@@ -3,6 +3,11 @@ Rails.application.routes.draw do
   resources :stores
   get "listing" => "products#listing"
 
+  resources :stores do
+    resources :products, only: [:index]
+  end
+
+
   post "new" => "registrations#create", as: :create_registration
   get "me" => "registrations#me"
   post "sign_in" => "registrations#sign_in"
