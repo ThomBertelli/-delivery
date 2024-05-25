@@ -21,6 +21,13 @@ class ApplicationController < ActionController::Base
     Credential.
     find_by(key: request.headers["X-API-KEY"]) || Credential.new
   end
+
+  def set_locale!
+    if params[:locale].present?
+      I18n.locale = params[:locale]
+    end
+  end
+
   private
 
   def check_token!
