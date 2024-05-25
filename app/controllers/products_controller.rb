@@ -3,6 +3,13 @@ class ProductsController < ApplicationController
   before_action :set_locale!
 
 
+  def show
+    respond_to do |format|
+      format.html
+      format.json { render :show, status: :ok, location: @product }
+    end
+  end
+
   def listing
     if !current_user.admin?
       redirect_to root_path, notice: "No permission for you! 🤪"
