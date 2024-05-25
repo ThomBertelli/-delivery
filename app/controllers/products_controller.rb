@@ -21,7 +21,7 @@ class ProductsController < ApplicationController
   def index
     respond_to do |format|
       format.json do
-        if only_buyers!
+        if only_buyers! || store_belongs_to_current_user?
           page = params.fetch(:page,1)
           @products = Product.
             where(store_id: params[:store_id]).
@@ -81,6 +81,10 @@ class ProductsController < ApplicationController
 
   def product_params
     params.require(:product).permit(:store_id, :title, :price)
+  end
+
+  def store_belongs_to_current_user?
+    @store.user == current_user
   end
 
 end
