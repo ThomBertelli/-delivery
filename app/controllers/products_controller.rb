@@ -1,4 +1,5 @@
 class ProductsController < ApplicationController
+  skip_forgery_protection
   before_action :authenticate!
   before_action :set_locale!
 
@@ -25,7 +26,7 @@ class ProductsController < ApplicationController
           page = params.fetch(:page,1)
           @products = Product.
             where(store_id: params[:store_id]).
-            order(:title)
+            order(:title).
             page(page)
         end
       end
@@ -84,6 +85,7 @@ class ProductsController < ApplicationController
   end
 
   def store_belongs_to_current_user?
+    @store = Store.find_by(id: params[:store_id])
     @store.user == current_user
   end
 
