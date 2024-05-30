@@ -5,6 +5,9 @@ Rails.application.routes.draw do
 
   resources :stores do
     resources :products, only: [:index]
+    member do
+      patch :toggle_active
+    end
   end
 
 
@@ -16,7 +19,11 @@ Rails.application.routes.draw do
     resources :orders, only: [:index, :create, :update, :destroy]
   end
 
-  resources :products
+  resources :products do
+    member do
+      patch :toggle_active
+    end
+  end
 
   root to: "welcome#index"
   get "up" => "rails/health#show", as: :rails_health_check
