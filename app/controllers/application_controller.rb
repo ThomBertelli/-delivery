@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
 
   def authenticate!
-    if request.format == Mime[:json]
+    if request.format != Mime[:html]
       check_token!
     else
       authenticate_user!
@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_user
-    if request.format == Mime[:json]
+    if request.format != Mime[:html]
       @user
     else
       super

@@ -1,6 +1,6 @@
 class StoresController < ApplicationController
   skip_forgery_protection
-  before_action :set_store, only: %i[ show edit update destroy toggle_active ]
+  before_action :set_store, only: %i[ show edit update destroy toggle_active upload_logo ]
   before_action :authenticate!
 
   # GET /stores or /stores.json
@@ -10,6 +10,10 @@ class StoresController < ApplicationController
     else
       @stores = Store.where(user: current_user)
     end
+
+    render json: @stores.map { |store|
+    store.as_json.merge(logo_url: store.logo.attached? ? url_for(store.logo) : nil)
+  }
   end
 
   def toggle_active
@@ -75,6 +79,14 @@ class StoresController < ApplicationController
     end
   end
 
+  def upload_logo
+    if @store.update(logo_params)
+      render json: { success: true, logo_url: url_for(@store.logo) }
+    else
+      render json: { success: false, errors: @store.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_store
@@ -89,5 +101,9 @@ class StoresController < ApplicationController
       else
         required.permit(:name)
       end
+    end
+
+    def logo_params
+      params.require(:store).permit(:logo)
     end
 end

@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     resources :products, only: [:index]
     member do
       patch :toggle_active
+      patch :upload_logo
     end
   end
 
