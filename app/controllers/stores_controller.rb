@@ -1,6 +1,6 @@
 class StoresController < ApplicationController
   skip_forgery_protection
-  before_action :set_store, only: %i[ show edit update destroy ]
+  before_action :set_store, only: %i[ show edit update destroy toggle_active ]
   before_action :authenticate!
 
   # GET /stores or /stores.json
@@ -10,6 +10,11 @@ class StoresController < ApplicationController
     else
       @stores = Store.where(user: current_user)
     end
+  end
+
+  def toggle_active
+    @store.update(active: !@store.active)
+    render json: { success: true, active: @store.active }
   end
 
   # GET /stores/1 or /stores/1.json

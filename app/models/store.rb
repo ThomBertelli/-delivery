@@ -3,6 +3,9 @@ class Store < ApplicationRecord
   before_validation :ensure_seller
   validates( :name,{ presence: true, length: {minimum: 3}})
 
+  scope :active, -> { where(active: true) }
+  scope :inactive, -> { where(active: false) }
+
   private
 
   def ensure_seller
