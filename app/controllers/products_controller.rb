@@ -1,5 +1,6 @@
 class ProductsController < ApplicationController
   skip_forgery_protection
+  before_action :set_product, only: [:show, :edit, :update, :destroy, :toggle_active]
   before_action :authenticate!
   before_action :set_locale!
 
@@ -55,7 +56,6 @@ class ProductsController < ApplicationController
   end
 
   def update
-    set_product
     respond_to do |format|
       if @product.update(product_params)
         format.html { redirect_to product_url(@product), notice: "Product was successfully updated." }
@@ -74,6 +74,12 @@ class ProductsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  def toggle_active
+    @product.update(active: !@product.active)
+    render json: { success: true, active: @product.active }
+  end
+
 
   private
 
