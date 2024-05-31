@@ -6,9 +6,9 @@ class StoresController < ApplicationController
   # GET /stores or /stores.json
   def index
     if current_user.admin?
-      @stores = Store.all
+      @stores = Store.includes(logo_attachment: :blob).all
     else
-      @stores = Store.where(user: current_user)
+      @stores = Store.includes(logo_attachment: :blob).where(user: current_user, discarded_at: nil)
     end
 
     render json: @stores.map { |store|
@@ -71,11 +71,16 @@ class StoresController < ApplicationController
 
   # DELETE /stores/1 or /stores/1.json
   def destroy
-    @store.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to stores_url, notice: "Store was successfully destroyed." }
-      format.json { head :no_content }
+    if @store.discard
+      respond_to do |format|
+        format.html { redirect_to stores_url, notice: 'Store was successfully deleted.' }
+        format.json { render json: { message: 'Store deleted successfully' }, status: :ok }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to stores_url, alert: 'Store could not be deleted.' }
+        format.json { render json: { error: 'Store could not be deleted' }, status: :unprocessable_entity }
+      end
     end
   end
 

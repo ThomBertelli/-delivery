@@ -26,8 +26,7 @@ class ProductsController < ApplicationController
         if only_buyers! || store_belongs_to_current_user?
           page = params.fetch(:page,1)
           @products = Product.
-            where(store_id: params[:store_id]).
-            order(:title).
+            where(store_id: params[:store_id],discarded_at: nil ).
             page(page).
             includes(:image_attachment)
 
@@ -70,7 +69,7 @@ class ProductsController < ApplicationController
   end
 
   def destroy
-    @product.destroy
+    @product.discard
     respond_to do |format|
       format.html { redirect_to products_url, notice: "Product was successfully destroyed." }
       format.json { head :no_content }

@@ -73,3 +73,5 @@ gem "state_machines-activerecord", "~> 0.9.0"
 gem "kaminari", "~> 1.2"
 
 gem "rails-i18n", "~> 7.0"
+
+gem "discard", "~> 1.3"

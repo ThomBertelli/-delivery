@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
   devise_for :users
-  resources :stores
-  get "listing" => "products#listing"
+
 
   resources :stores do
     resources :products, only: [:index]
@@ -11,6 +10,7 @@ Rails.application.routes.draw do
     end
   end
 
+  get "listing" => "products#listing"
 
   post "new" => "registrations#create", as: :create_registration
   get "me" => "registrations#me"
