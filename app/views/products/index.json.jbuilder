@@ -1,3 +1,4 @@
+
 json.result do
   if params[:page].present?
     json.pagination do
@@ -16,6 +17,7 @@ json.result do
     json.array! @products do |product|
       json.extract! product, :id, :title
       json.price number_to_currency(product.price)
+      json.image_url Rails.application.routes.url_helpers.url_for(product.image) if product.image.attached?
     end
   end
 end

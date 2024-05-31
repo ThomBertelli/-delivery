@@ -1,6 +1,6 @@
 class ProductsController < ApplicationController
   skip_forgery_protection
-  before_action :set_product, only: [:show, :edit, :update, :destroy, :toggle_active]
+  before_action :set_product, only: [:show, :edit, :update, :destroy, :toggle_active, :upload_image]
   before_action :authenticate!
   before_action :set_locale!
 
@@ -28,7 +28,9 @@ class ProductsController < ApplicationController
           @products = Product.
             where(store_id: params[:store_id]).
             order(:title).
-            page(page)
+            page(page).
+            includes(:image_attachment)
+
         end
       end
     end
@@ -80,8 +82,20 @@ class ProductsController < ApplicationController
     render json: { success: true, active: @product.active }
   end
 
+  def upload_image
+    if @product.update(image_params)
+      render json: { success: true, image_url: url_for(@product.image) }
+    else
+      render json: { success: false, errors: @product.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
 
   private
+
+  def default_url_options
+    { host: request.base_url }
+  end
 
   def set_product
     @product = Product.find(params[:id])
@@ -94,6 +108,10 @@ class ProductsController < ApplicationController
   def store_belongs_to_current_user?
     @store = Store.find_by(id: params[:store_id])
     @store.user == current_user
+  end
+
+  def image_params
+    params.require(:product).permit(:image)
   end
 
 end
