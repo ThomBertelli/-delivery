@@ -15,7 +15,7 @@ json.result do
   end
   json.products do
     json.array! @products do |product|
-      json.extract! product, :id, :title
+      json.extract! product, :id, :title, :active, :discarded_at
       json.price number_to_currency(product.price)
       json.image_url Rails.application.routes.url_helpers.url_for(product.image) if product.image.attached?
     end

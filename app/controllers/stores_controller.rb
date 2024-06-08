@@ -7,6 +7,8 @@ class StoresController < ApplicationController
   def index
     if current_user.admin?
       @stores = Store.includes(logo_attachment: :blob).all
+    elsif current_user.buyer?
+      @stores = Store.includes(logo_attachment: :blob).where(active: true,discarded_at: nil)
     else
       @stores = Store.includes(logo_attachment: :blob).where(user: current_user, discarded_at: nil)
     end

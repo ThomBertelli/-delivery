@@ -23,13 +23,18 @@ class ProductsController < ApplicationController
   def index
     respond_to do |format|
       format.json do
-        if only_buyers! || store_belongs_to_current_user?
+        if only_buyers!
+          page = params.fetch(:page,1)
+          @products = Product.
+            where(store_id: params[:store_id],discarded_at: nil, active: true).
+            page(page).
+            includes(:image_attachment)
+        elsif store_belongs_to_current_user?
           page = params.fetch(:page,1)
           @products = Product.
             where(store_id: params[:store_id],discarded_at: nil ).
             page(page).
             includes(:image_attachment)
-
         end
       end
     end
