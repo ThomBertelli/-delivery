@@ -1,4 +1,5 @@
 class OrderItemsController < ApplicationController
+  skip_forgery_protection
   before_action :set_order_item, only: [:show, :edit, :update, :destroy]
 
   # GET /order_items
@@ -44,7 +45,7 @@ class OrderItemsController < ApplicationController
     respond_to do |format|
       if @order_item.save
         format.html { redirect_to @order_item, notice: 'Order item was successfully created.' }
-        format.json { render :show, status: :created, location: @order_item }
+        format.json { render :create, status: :created, location: @order_item }
       else
         format.html { render :new }
         format.json { render json: @order_item.errors, status: :unprocessable_entity }
