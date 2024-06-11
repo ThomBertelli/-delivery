@@ -28,6 +28,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :orders do
+    member do
+      post 'pay'
+    end
+  end
+
   root to: "welcome#index"
   get "up" => "rails/health#show", as: :rails_health_check
 end

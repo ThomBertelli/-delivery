@@ -17,6 +17,20 @@ class OrdersController<ApplicationController
     end
   end
 
+  def pay
+    order = Order.find(params[:id])
+    value = params[:value]
+    number = params[:number]
+    valid = params[:valid]
+    cvv = params[:cvv]
+
+    # Enfileira o job para ser executado posteriormente
+    PaymentJob.perform_later(order: order, value: value, number: number, valid: valid, cvv: cvv)
+
+    # Renderiza uma resposta ou redireciona conforme necessário
+    render json: { status: 'Pagamento enfileirado com sucesso' }, status: :ok
+  end
+
   private
 
   def order_params
