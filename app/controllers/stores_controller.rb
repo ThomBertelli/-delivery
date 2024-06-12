@@ -94,6 +94,28 @@ class StoresController < ApplicationController
     end
   end
 
+  def new_order
+    response.headers["Content-Type"] = "text/event-stream"
+    sse = SSE.new(response.stream, retry: 300, event: "waiting-orders")
+    sse.write({hello: "world!"}, event: "waiting-order")
+
+    EventMachine.run do
+      EventMachine::PeriodicTimer.new(3) do
+        order = Order.where(store_id: params[:store_id], status: :created)
+        if order
+          message = { time: Time.now, order: order }
+          sse.write(message, event: "new-order")
+        else
+          sse.write(message, event: "no")
+        end
+      end
+    end
+  rescue IOError, ActionController::Live::ClientDisconnected
+    sse.close
+  ensure
+    sse.close
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_store
