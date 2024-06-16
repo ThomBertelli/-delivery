@@ -3,9 +3,9 @@ class PaymentJob < ApplicationJob
   queue_as :default
 
   def perform(order:, value:, number:, valid:, cvv:)
-    params = {value: value, number: number, valid: valid, cvv: cvv}
+    params = {payment:{value: value, number: number,valid: valid,cvv: cvv}}
     response = con.post("/payments", params.to_json)
-  # order.paid if response.success?
+    order.pay if response.success?
   end
 
   private

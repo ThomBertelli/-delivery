@@ -31,7 +31,9 @@ Rails.application.routes.draw do
   end
 
   resources :orders do
+    get "/watch" => "orders#order_watch"
     member do
+      patch :update_state
       post 'pay'
     end
   end

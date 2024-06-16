@@ -2,6 +2,7 @@ class StoresController < ApplicationController
   skip_forgery_protection
   before_action :set_store, only: %i[ show edit update destroy toggle_active upload_logo ]
   before_action :authenticate!
+  include ActionController::Live
 
   # GET /stores or /stores.json
   def index
@@ -25,6 +26,10 @@ class StoresController < ApplicationController
 
   # GET /stores/1 or /stores/1.json
   def show
+    respond_to do |format|
+      format.html
+      format.json { render :show, status: :ok, location: @store }
+    end
   end
 
   # GET /stores/new
@@ -101,9 +106,21 @@ class StoresController < ApplicationController
 
     EventMachine.run do
       EventMachine::PeriodicTimer.new(3) do
-        order = Order.where(store_id: params[:store_id], status: :created)
+        order = Order.includes(:order_items).where(store_id: params[:store_id], state: :paid).last
         if order
-          message = { time: Time.now, order: order }
+          message = {
+          time: Time.now,
+          order: order.as_json(
+            include: {
+              order_items: {
+                include: {
+                  product: {
+                    only: [:title]
+                  }
+                }
+              }
+            }
+          )}
           sse.write(message, event: "new-order")
         else
           sse.write(message, event: "no")
@@ -111,9 +128,9 @@ class StoresController < ApplicationController
       end
     end
   rescue IOError, ActionController::Live::ClientDisconnected
-    sse.close
+    sse.close if sse
   ensure
-    sse.close
+    sse.close if sse
   end
 
   private
