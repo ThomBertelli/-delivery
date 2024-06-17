@@ -1,6 +1,6 @@
 class OrdersController<ApplicationController
   skip_forgery_protection
-  before_action :set_order, only: [:update_state]
+  before_action :set_order, only: [:update_state, :show]
   before_action :authenticate!,:only_buyers!
   include ActionController::Live
 
@@ -33,15 +33,35 @@ class OrdersController<ApplicationController
 
   def order_watch
       response.headers["Content-Type"] = "text/event-stream"
-      sse = SSE.new(response.stream, retry: 1000, event: "watching-orders")
+      sse = SSE.new(response.stream, retry: 300, event: "watching-orders")
       sse.write({hello: "world!"}, event: "watching-order")
 
       EventMachine.run do
-        EventMachine::PeriodicTimer.new(3) do
-          order = Order.where(id: params[:order_id], state: :accepted).last
-          if order
+        EventMachine::PeriodicTimer.new(15) do
+
+          order = Order.where(id: params[:order_id]).last
+          puts "################"
+          puts order.state
+          case order.state
+
+          when "created"
             message = { time: Time.now, order: order }
-            sse.write(message, event: "order-changed")
+            sse.write(message, event: "order-created")
+          when "accepted"
+            message = { time: Time.now, order: order }
+            sse.write(message, event: "order-accepted")
+          when "rejected"
+            message = { time: Time.now, order: order }
+            sse.write(message, event: "order-rejected")
+          when "paid"
+            message = { time: Time.now, order: order }
+            sse.write(message, event: "order-paid")
+          when "notPaid"
+            message = { time: Time.now, order: order }
+            sse.write(message, event: "order-not-paid")
+          when "sended"
+            message = { time: Time.now, order: order }
+            sse.write(message, event: "order-sended")
           else
             sse.write(message, event: "no")
           end
@@ -59,6 +79,13 @@ class OrdersController<ApplicationController
       render json: { success: true,  }
     else
       render json: { success: false, errors: @order.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
+  def show
+    respond_to do |format|
+      format.html
+      format.json { render :show, status: :ok, location: @order }
     end
   end
 

@@ -15,19 +15,17 @@ class Order < ApplicationRecord
     event :reject do
       transition paid: :rejected
     end
-    event :pay do
+    event :payOk do
       transition created: :paid
+    end
+    event :payError do
+      transition created: :notPaid
     end
     event :send_order do
       transition accept: :sended
     end
 
-    state :created
-    state :accepted
-    state :rejected
-    state :paid
-    state :sended
-
+  
   end
 
   private

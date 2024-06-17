@@ -101,8 +101,8 @@ class StoresController < ApplicationController
 
   def new_order
     response.headers["Content-Type"] = "text/event-stream"
-    sse = SSE.new(response.stream, retry: 300, event: "waiting-orders")
-    sse.write({hello: "world!"}, event: "waiting-order")
+    sseVendy = SSE.new(response.stream, retry: 300, event: "waiting-orders")
+    sseVendy.write({hello: "world!"}, event: "waiting-order")
 
     EventMachine.run do
       EventMachine::PeriodicTimer.new(3) do
@@ -121,16 +121,16 @@ class StoresController < ApplicationController
               }
             }
           )}
-          sse.write(message, event: "new-order")
+          sseVendy.write(message, event: "new-order")
         else
-          sse.write(message, event: "no")
+          sseVendy.write(message, event: "no")
         end
       end
     end
   rescue IOError, ActionController::Live::ClientDisconnected
-    sse.close if sse
+    sseVendy.close
   ensure
-    sse.close if sse
+    sseVendy.close
   end
 
   private
