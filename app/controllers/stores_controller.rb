@@ -6,17 +6,20 @@ class StoresController < ApplicationController
 
   # GET /stores or /stores.json
   def index
-    if current_user.admin?
-      @stores = Store.includes(logo_attachment: :blob).all
-    elsif current_user.buyer?
-      @stores = Store.includes(logo_attachment: :blob).where(active: true,discarded_at: nil)
-    else
-      @stores = Store.includes(logo_attachment: :blob).where(user: current_user, discarded_at: nil)
-    end
+    respond_to do |format|
+      format.json do
+      page = params.fetch(:page,1)
 
-    render json: @stores.map { |store|
-    store.as_json.merge(logo_url: store.logo.attached? ? url_for(store.logo) : nil)
-  }
+        if current_user.admin?
+          @stores = Store.page(page).all.includes(:logo_attachment)
+        elsif current_user.buyer?
+          @stores = Store.where(active: true,discarded_at: nil).page(page).includes(:logo_attachment)
+        else
+          @stores = Store.where(user: current_user, discarded_at: nil).page(page).includes(:logo_attachment)
+        end
+
+      end
+    end
   end
 
   def toggle_active
