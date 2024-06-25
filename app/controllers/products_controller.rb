@@ -21,6 +21,7 @@ class ProductsController < ApplicationController
   end
 
   def index
+    order_by = params[:order] || 'title'
     respond_to do |format|
       format.json do
         if only_buyers!
@@ -28,13 +29,15 @@ class ProductsController < ApplicationController
           @products = Product.
             where(store_id: params[:store_id],discarded_at: nil, active: true).
             page(page).
-            includes(:image_attachment)
+            includes(:image_attachment).
+            order(order_by)
         elsif store_belongs_to_current_user?
           page = params.fetch(:page,1)
           @products = Product.
             where(store_id: params[:store_id],discarded_at: nil ).
             page(page).
-            includes(:image_attachment)
+            includes(:image_attachment).
+            order(order_by)
         end
       end
     end
