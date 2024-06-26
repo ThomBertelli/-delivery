@@ -34,7 +34,29 @@ class RegistrationsController<ApplicationController
     end
   end
 
+  def update
+    @user = User.find(params[:id])
+
+    unless current_credential.user == @user
+      return render json: { message: "Unauthorized" }, status: :unauthorized
+    end
+
+    if @user.valid_password?(update_params[:current_password])
+      if @user.update(email: update_params[:email], password: update_params[:password])
+        render json: { message: "User information updated successfully." }, status: :ok
+      else
+        render json: { message: "Unable to update user information.", errors: @user.errors.full_messages }, status: :unprocessable_entity
+      end
+    else
+      render json: { message: "Current password is incorrect." }, status: :unauthorized
+    end
+  end
+
   private
+
+  def update_params
+    params.require(:user).permit(:email, :password, :current_password)
+  end
 
   def user_params
     params
