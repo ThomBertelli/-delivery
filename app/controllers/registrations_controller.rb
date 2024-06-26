@@ -41,14 +41,20 @@ class RegistrationsController<ApplicationController
       return render json: { message: "Unauthorized" }, status: :unauthorized
     end
 
-    if @user.valid_password?(update_params[:current_password])
-      if @user.update(email: update_params[:email], password: update_params[:password])
-        render json: { message: "User information updated successfully." }, status: :ok
-      else
-        render json: { message: "Unable to update user information.", errors: @user.errors.full_messages }, status: :unprocessable_entity
+    update_params = params.require(:user).permit(:email, :current_password, :password)
+    update_hash = { email: update_params[:email] }
+
+    if update_params[:password].present?
+      unless @user.valid_password?(update_params[:current_password])
+        return render json: { message: "Current password is incorrect." }, status: :unauthorized
       end
+      update_hash[:password] = update_params[:password]
+    end
+
+    if @user.update(update_hash)
+      render json: { message: "User information updated successfully." }, status: :ok
     else
-      render json: { message: "Current password is incorrect." }, status: :unauthorized
+      render json: { message: "Unable to update user information.", errors: @user.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
