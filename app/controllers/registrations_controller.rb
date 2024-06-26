@@ -1,5 +1,5 @@
 class RegistrationsController<ApplicationController
-  skip_forgery_protection only: [:create, :me, :sign_in]
+  skip_forgery_protection only: [:create, :me, :sign_in, :update]
   before_action :authenticate!, only: [:me]
   rescue_from User::InvalidToken, with: :not_authorized
 
@@ -36,10 +36,6 @@ class RegistrationsController<ApplicationController
 
   def update
     @user = User.find(params[:id])
-
-    unless current_credential.user == @user
-      return render json: { message: "Unauthorized" }, status: :unauthorized
-    end
 
     update_params = params.require(:user).permit(:email, :current_password, :password)
     update_hash = { email: update_params[:email] }
