@@ -57,6 +57,12 @@ class RegistrationsController<ApplicationController
   def destroy
     @user = User.find(params[:id])
 
+    if @user.role == 'seller'
+      @user.stores.each do |store|
+        store.discard
+      end
+    end
+
     deletion_timestamp = Time.current.strftime("%Y%m%d%H%M%S")
     deleted_email = "userdeleted@#{deletion_timestamp}.com"
 
