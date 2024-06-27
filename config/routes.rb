@@ -19,7 +19,7 @@ Rails.application.routes.draw do
   get "me" => "registrations#me"
   post "sign_in" => "registrations#sign_in"
   patch '/user/:id', to: 'registrations#update', as: 'update_user'
-
+  delete '/user/:id', to: 'registrations#destroy', as: 'delete_user'
   scope :buyers do
     resources :orders, only: [:index, :create, :update, :destroy]
   end

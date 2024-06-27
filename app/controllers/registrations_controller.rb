@@ -1,5 +1,5 @@
 class RegistrationsController<ApplicationController
-  skip_forgery_protection only: [:create, :me, :sign_in, :update]
+  skip_forgery_protection only: [:create, :me, :sign_in, :update, :destroy]
   before_action :authenticate!, only: [:me]
   rescue_from User::InvalidToken, with: :not_authorized
 
@@ -12,7 +12,7 @@ class RegistrationsController<ApplicationController
 
   def sign_in
     access = current_credential.access
-    user = User.where(role:access).find_by(email: sign_in_params[:email])
+    user = User.where(role:access,discarded_at: nil).find_by(email: sign_in_params[:email])
 
     if !user || !user.valid_password?(sign_in_params[:password])
       render json: {message: "Nope!"}, status: 401
@@ -51,6 +51,21 @@ class RegistrationsController<ApplicationController
       render json: { message: "User information updated successfully." }, status: :ok
     else
       render json: { message: "Unable to update user information.", errors: @user.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @user = User.find(params[:id])
+
+    deletion_timestamp = Time.current.strftime("%Y%m%d%H%M%S")
+    deleted_email = "userdeleted@#{deletion_timestamp}.com"
+
+    @user.email = deleted_email
+
+    if @user.save(validate: false) && @user.discard
+      render json: { message: "User deleted successfully." }, status: :ok
+    else
+      render json: { message: "Unable to delete user." }, status: :unprocessable_entity
     end
   end
 

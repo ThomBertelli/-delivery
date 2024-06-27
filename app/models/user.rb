@@ -4,6 +4,8 @@ class User < ApplicationRecord
   has_many :stores
   validates :role, presence: true
 
+  include Discard::Model
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
