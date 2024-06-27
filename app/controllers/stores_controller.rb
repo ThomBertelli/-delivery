@@ -136,6 +136,15 @@ class StoresController < ApplicationController
     sseVendy.close
   end
 
+  def orders_history
+    respond_to do |format|
+      page = params.fetch(:page, 1)
+      format.json do
+        @orders = Order.includes(order_items: :product).where(store_id: params[:store_id]).where.not(order_items: { id: nil }).page(page)
+      end
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_store

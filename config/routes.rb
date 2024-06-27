@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :stores do
     resources :products, only: [:index]
     get "/orders/new" => "stores#new_order"
+    get "/orders/history" => "stores#orders_history"
     member do
       patch :toggle_active
       patch :upload_logo
