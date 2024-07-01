@@ -51,7 +51,7 @@ Este projeto é uma plataforma de entrega de alimentos que conecta restaurantes 
 
 ### Demo
 
-[![Demo Video](https://img.youtube.com/vi/S49e3XLlU30/0.jpg)](https://www.youtube.com/watch?v=S49e3XLlU30)
+https://github.com/ThomBertelli/delivery/assets/72208322/8fc29b24-a12b-4de0-958a-229d033ba006
 
 
 ### Links
