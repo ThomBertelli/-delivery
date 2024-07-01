@@ -1,24 +1,64 @@
-# README
+# Delivery
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Projeto desenvolvido durante o programa Quero Ser Dev da LSWA.
 
-Things you may want to cover:
+## Visão Geral
 
-* Ruby version
+Este projeto é uma plataforma de entrega de alimentos que conecta restaurantes a consumidores. A aplicação é dividida em três partes principais:
 
-* System dependencies
+* Delivery: Uma aplicação backend desenvolvida em Ruby on Rails para gerenciar pedidos e entregas.
+* Consumy: Uma aplicação frontend desenvolvida em Vue.js para permitir que os usuários façam pedidos de restaurantes.
+* Vendy: Uma aplicação fronted desenvolvida em Vue.js para que os restaurantes possam oferecer seus produtos e receber pedidos.
 
-* Configuration
 
-* Database creation
+## Tecnologias Utilizadas
 
-* Database initialization
+* Backend: Ruby on Rails
+* Frontend: Vue.js,Tailwind CSS, PrimeVue
+* Componentes:
+* Banco de Dados: SQL Lite
+* Autenticação: Devise (para Rails)
+* API: JSON API para comunicação entre o backend e o frontend
+* Fila de Tarefas: Sidekiq
+* Eventos em Tempo Real: Server-Sent Events (SSE)
 
-* How to run the test suite
+## Funcionalidades
 
-* Services (job queues, cache servers, search engines, etc.)
+### Comprador
 
-* Deployment instructions
+* Cadastro e autenticação
+* Excluir conta, as informações do usuário são substituídos por placeholders para garantir a privacidade
+* Visualizar lojas com paginação
+* Ordenar lojas por nome
+* Listar produtos com paginação
+* Ordenar por nome ou preço
+* Realizar pagamento do pedido
 
-* ...
+### Lojista
+
+* Cadastro e autenticação
+* Excluir conta, as informações do usuário são substituídos por placeholders para garantir a privacidade
+* Criar, Visualizar, Atualizar e Deletar(soft-delete) lojas
+* Criar, Visualizar, Atualizar e Deletar(soft-delete) produtos
+* Adicionar uma logo a loja
+* Adicionar imagem do produto
+* Desabilitar loja sem excluir a loja deixa de ser exibida para os compradores
+* Desabilitar produtos sem exluir
+* Listar histórico de pedidos com paginação
+* Aceitar ou Rejeitar pedido
+* Informar que o pedido saiu para entrega
+
+
+### Demo
+
+[![Demo Video](https://img.youtube.com/vi/S49e3XLlU30/0.jpg)](https://www.youtube.com/watch?v=S49e3XLlU30)
+
+
+### Links
+
+[Consumy](https://github.com/ThomBertelli/consumy) <br>
+[Vendy](https://github.com/ThomBertelli/vendy) <br>
+[Delivery](https://github.com/ThomBertelli/delivery) <br>
+
+
+
